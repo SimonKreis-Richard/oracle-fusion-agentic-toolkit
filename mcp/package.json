@@ -1,6 +1,6 @@
 {
   "name": "oracle-fusion-agentic-toolkit-docs-mcp",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "description": "Bundled MCP server for oracle-fusion-agentic-toolkit. Returns docs.oracle.com pages as raw markdown through fetch_oracle_page, the only path to a faithful quotation. Bundled only, never published: the standalone package it descends from is deprecated.",
   "type": "module",

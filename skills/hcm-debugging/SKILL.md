@@ -271,10 +271,11 @@ reasoning alone.
 
 Do all of it, in this order:
 
-1. Query the `oracle-fusion-docs` MCP (`search_oracle_docs`, then `fetch_oracle_page` on what looks
-   relevant) with **the verbatim error string in quotes**, then with the flow name plus the error
-   family. When the MCP is unavailable, web search restricted to `docs.oracle.com` is the fallback
-   and works fine.
+1. **Find the page, then read it.** Web search restricted to `docs.oracle.com`, with **the verbatim
+   error string in quotes**, then with the flow name plus the error family. Open what looks relevant
+   with `fetch_oracle_page` of the `oracle-fusion-docs` MCP, which is the only path to the verbatim
+   text. A page that comes back as navigation only was not rendered: try another release of the same
+   page, or a neighbouring guide.
 2. Search Oracle Cloud Customer Connect and My Oracle Support Knowledge Base references with web
    search. Prefer exact message matches over topical matches. Collect Doc IDs and thread URLs.
 3. When the timeline suggests a regression, check the release notes and What's New for the quarterly

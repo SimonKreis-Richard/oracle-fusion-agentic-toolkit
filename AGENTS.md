@@ -147,11 +147,17 @@ fichiers de fond dans son dossier, lus au besoin et non au démarrage :
 
 ### Le serveur MCP embarqué, `mcp/`
 
-Tout le serveur tient dans `mcp/src/index.ts`, sectionné par des bannières `// ──` : config
-(`MAX_PAGE_CHARS=15000`, Jina Reader, timeout 25 s), `TOPIC_INDEX` (environ 410 lignes de données,
-à élaguer), `ResponseCache` (LRU mémoire plus cache disque JSON), `jinaGet` (trois tentatives,
-backoff), les trois outils, le câblage JSON-RPC. Flux de `fetch_oracle_page` : garde-fou de
-domaine, cache mémoire, cache disque, Jina Reader, nettoyage, troncature à 15 000 caractères.
+Tout le serveur tient dans `mcp/src/index.ts`, 374 lignes, sectionné par des bannières `// ──` :
+config (`MAX_PAGE_CHARS=15000`, Jina Reader, timeout 25 s), `ResponseCache` (LRU mémoire seul),
+`jinaGet` (trois tentatives, backoff), **un seul outil**, le câblage JSON-RPC. Flux de
+`fetch_oracle_page` : garde-fou de domaine, cache mémoire, Jina Reader, nettoyage, troncature à
+15 000 caractères.
+
+**Élagué en 4.0.0, le 2026-09-07**, de 1142 lignes à 374. Retirés : `search_oracle_docs`,
+`list_modules`, l'index statique d'environ 410 lignes, et le cache disque. Motif : une recherche web
+restreinte à `docs.oracle.com` trouve une page mieux qu'un index tenu à la main, et le cache disque
+était le piège le plus coûteux du dépôt. **Trouver est le travail du web, citer fidèlement est le
+travail de ce serveur.** Ne pas re-proposer d'outil de recherche ici.
 
 Invariants propres au serveur, hérités de son ancien dépôt :
 
@@ -245,9 +251,10 @@ severity, effort_hands_on, eta_elapsed, blocked_on, next_action`.
 - **`WARNING: unresolved image reference` dans un dossier** signifie que Jira n'a pas renvoyé la
   pièce jointe référencée par le commentaire. L'image manque réellement dans la réponse de l'API :
   ce n'est pas le script qui l'a perdue.
-- **Le cache disque du MCP de documentation** vit dans `~/.cache/oracle-fusion-docs` et survit aux
-  redémarrages **et aux rebuilds**. Une doc « périmée » ou un comportement inexplicable après une
-  modification vient de là : `rm -rf ~/.cache/oracle-fusion-docs` avant de conclure à un bug.
+- **Le cache du MCP est en mémoire uniquement**, une heure, cinquante entrées, et il meurt avec le
+  processus. Une doc qui paraît périmée se règle donc en redémarrant le serveur, ce qui revient à
+  ouvrir une nouvelle conversation. Le cache disque qui survivait aux rebuilds a été retiré en
+  4.0.0 : il était la première cause de « la doc n'a pas changé après ma modification ».
 - **`fetch_oracle_page` tronque à 15 000 caractères.** Une page qui « manque » de contenu est
   tronquée, pas mal parsée : chercher `[... truncated`. Une page qui ne renvoie que la
   navigation du site n'a pas été rendue par Jina : essayer une autre version de la page

@@ -191,7 +191,7 @@ plugin.
    `WebFetch` fait résumer la page par un modèle intermédiaire. `fetch_oracle_page` est **le seul
    chemin vers une citation fidèle**, et toute la méthode repose sur des citations envoyées au
    client. En revanche `search_oracle_docs`, `list_modules`, l'index de sujets et le cache disque
-   sont dépassés par la recherche web et seront élagués (non fait, non bloquant).
+   sont dépassés par la recherche web. **Élagage fait le 2026-09-07, voir D17.**
 3. **`commands/` migre vers `skills/`**, format hérité selon la documentation Claude Code. Le
    câblage perd un type d'objet et passe à un script Node multiplateforme.
 4. **Le miroir `.agents/skills/` est supprimé.** Les skills sont des fichiers markdown à un chemin
@@ -241,8 +241,8 @@ l'ancien dépôt puisse être supprimé sans perte.
 1. **Un seul fichier source.** Ne pas éclater `mcp/src/index.ts` en modules.
 2. **Suppression plutôt qu'ajout.** Par défaut, on refuse une feature au serveur. Trois passes de
    suppression de code mort ont déjà eu lieu avant la fusion.
-3. **Cache disque en millisecondes natives** ; les anciens fichiers au format secondes sont
-   traités comme expirés. Devient sans objet quand le cache disque sera élagué.
+3. **Cache disque en millisecondes natives** ; les anciens fichiers au format secondes étaient
+   traités comme expirés. **Sans objet depuis D17** : le cache disque n'existe plus.
 4. **Pas de `.d.ts`** : le serveur est un exécutable, pas une bibliothèque.
 5. **Vulnérabilité `hono` de `npm audit` ignorée sciemment**, transitive et hors chemin stdio.
 6. **`npm publish` uniquement sur demande explicite**, et désormais uniquement pour déprécier :
@@ -258,6 +258,29 @@ l'ancien dépôt puisse être supprimé sans perte.
    dans la section « Le serveur MCP embarqué » d'`AGENTS.md`, son smoke-check dans l'étape 6 du
    smoke-check de ce dépôt, sa procédure npm réduite au point 6 ci-dessus. Le dépôt voisin peut
    être supprimé.
+
+### D17 — Le serveur MCP fait une seule chose, et le cache ne survit pas au processus
+**Date :** 2026-09-07 · **Confiance :** haute
+**Critère décisionnel :** le serveur portait trois outils pour un seul besoin réel. `fetch_oracle_page`
+est irremplaçable, parce que la documentation Oracle est rendue côté client et que c'est le seul
+chemin vers une citation fidèle. `search_oracle_docs` reposait sur un index de mots-clés tenu à la
+main, qu'une recherche web restreinte à `docs.oracle.com` bat sans effort et sans maintenance, et
+`list_modules` ne faisait que réciter neuf URL. Multiplier les outils dégrade en plus la sélection
+côté agent. Le cache disque, lui, survivait aux redémarrages **et aux rebuilds** : c'était la
+première cause de « la doc n'a pas changé après ma modification », soit un piège permanent en
+échange d'économies de requêtes marginales.
+**Conséquence :**
+1. **Un seul outil exposé, `fetch_oracle_page`.** Retirés : `search_oracle_docs`, `list_modules`,
+   `TOPIC_INDEX` (environ 410 lignes de données), `FUSION_MODULE_PAGES`, `searchTopicIndex`, tout
+   le cache disque et les imports `fs`, `path`, `os`, `crypto` devenus inutiles.
+2. **Le serveur passe de 1142 à 374 lignes**, version 4.0.0. Le retrait de deux outils est une
+   rupture d'interface, d'où le majeur.
+3. **Le cache mémoire est conservé** : LRU, cinquante entrées, une heure, mort avec le processus.
+   Il sert au sein d'une même session, ce qui est le cas d'usage réel.
+4. **La règle à retenir, écrite dans le code et dans `AGENTS.md` :** trouver est le travail du web,
+   citer fidèlement est le travail de ce serveur. Ne pas re-proposer d'outil de recherche ici.
+5. Propagé dans `README.md`, `AGENTS.md`, `mcp/README.md`, `skills/hcm-debugging/SKILL.md` et le
+   smoke-check, dont l'attendu devient **exactement une ligne** dans `tools/list`.
 
 ---
 
@@ -290,4 +313,4 @@ l'ancien dépôt puisse être supprimé sans perte.
 | Faut-il des tests sur `build_actions.ts` ? | **Ouverte, penchant non** (D4). C'est pourtant le composant qui casserait en silence si le contrat de `output-format.md` dérivait. Le smoke-check couvre le cas nominal. |
 | `README.md` doit-il rester en anglais alors que le contexte est en français ? | **Tranchée par l'usage, pas par décision.** `README.md` et les skills sont en anglais (ils sont le produit), `AGENTS.md`, `CLAUDE.md` et ce fichier en français (ils sont le contexte de travail). Conserver cette séparation. |
 | Le plugin sera-t-il un jour installé plutôt que câblé par jonctions ? | **Oui, à la publication, date non fixée.** `.claude-plugin/marketplace.json` existe et pointe sur `./`. Ce jour-là : `git init`, `.mcp.json` sur `${CLAUDE_PLUGIN_ROOT}`, dépréciation de l'ancien paquet npm. |
-| Élaguer le serveur MCP ? | **Décidé, non fait, non bloquant.** Retirer `search_oracle_docs`, `list_modules`, l'index de sujets et le cache disque, garder `fetch_oracle_page` et le cache mémoire. Le serveur passerait d'environ 1100 à 500 lignes. Retirer alors le piège « cache disque » d'`AGENTS.md` et la ligne du README. |
+| Élaguer le serveur MCP ? | **Tranchée et faite le 2026-09-07.** Voir D17. |

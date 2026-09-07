@@ -165,9 +165,10 @@ Stated plainly, because these are choices rather than oversights, and the reason
 - **No test suite, no linter, no formatter.** The only automated net is `tsc`, which proves the code
   compiles and nothing more. The end-to-end check is a manual procedure in
   `.claude/skills/smoke-check/SKILL.md`.
-- **The MCP server is not yet trimmed.** It still exposes `search_oracle_docs` and `list_modules`
-  alongside a static topic index. Web search does that job better, and they are scheduled for
-  removal. Only `fetch_oracle_page` matters.
+- **The MCP server does one thing only.** It exposes `fetch_oracle_page` and nothing else. A search
+  tool, a module listing and a static topic index used to live there and were removed in its 4.0.0:
+  a web search restricted to `docs.oracle.com` finds a page better than a hand-kept index ever did.
+  Finding is the web's job, quoting faithfully is this server's job.
 - **`.mcp.json` uses a relative path**, which is what works for a repository opened as a project. An
   installed plugin needs `${CLAUDE_PLUGIN_ROOT}`. See the note at the end of `mcp/README.md`.
 - **Batch analysis of tickets is out of scope.** Ingestion is batched; the reasoning is not.
@@ -181,7 +182,7 @@ Stated plainly, because these are choices rather than oversights, and the reason
 | `Not found (HTTP 404)` on a valid key | the account cannot see that project, or the key has a typo |
 | A dossier shows `WARNING: unresolved image reference` | Jira did not return the attachment the comment references. It is genuinely missing from the API response. |
 | `npm run actions` fails on a brief | the frontmatter is incomplete. The error names the file and the field. The contract is in `skills/hcm-debugging/output-format.md`. |
-| A documentation lookup returns stale content | clear `~/.cache/oracle-fusion-docs` |
+| A documentation lookup returns stale content | the cache is in memory only, so restart the MCP server, which in practice means a new conversation |
 | An Oracle page comes back as navigation only | it was not rendered. Try another release of the same page, or a neighbouring guide. |
 | Batch stops with `Batch done: ... N failed` | the failed keys are listed on the last line, re-run them individually |
 

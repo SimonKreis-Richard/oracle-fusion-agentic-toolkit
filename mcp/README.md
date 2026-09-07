@@ -15,9 +15,10 @@ a plain HTTP fetch returns a JavaScript shell with none of the text, and a fetch
 summarises the page puts an intermediate model between you and the sentence you intend to quote.
 The whole method of this plugin rests on quoting Oracle verbatim with the URL, so this matters.
 
-To **find** a page, a web search restricted to `docs.oracle.com` beats the server's own index. Two
-further tools, `search_oracle_docs` and `list_modules`, are still exposed but are superseded by web
-search and are scheduled for removal.
+To **find** a page, use a web search restricted to `docs.oracle.com`. That is not this server's job
+and never will be again: `search_oracle_docs`, `list_modules` and a hand-kept index of roughly 410
+lines were removed in 4.0.0, because web search finds a page better than an index somebody has to
+maintain. Finding is the web's job, quoting faithfully is this server's job.
 
 ## Invariants
 
@@ -35,9 +36,11 @@ These come from the server's original repository and still hold.
 
 ## Known traps
 
-- **The disk cache lives in `~/.cache/oracle-fusion-docs`** and survives restarts and rebuilds.
-  Stale documentation, or behaviour that does not change after an edit, comes from there first:
-  `rm -rf ~/.cache/oracle-fusion-docs`.
+- **The cache is in memory only**, one hour, fifty entries, and it dies with the process. So a page
+  that looks stale is fixed by restarting the server, which in practice means a new conversation.
+  A disk cache under `~/.cache/oracle-fusion-docs` was removed in 4.0.0: it survived restarts and
+  rebuilds, which made it the first cause of "the documentation did not change after my edit". If
+  that folder still exists on your machine it is a leftover and can be deleted.
 - **`fetch_oracle_page` truncates at 15000 characters.** A page that seems to be missing content is
   truncated, not mis-parsed. Search for `[... truncated`.
 - **A page that comes back as site navigation only** was not rendered. Try another release of the

@@ -113,8 +113,8 @@ printf '%s\n' \
 | node mcp/dist/index.js 2>/dev/null | grep -o '"name":"[a-z_]*"'
 ```
 
-Attendu : une ligne par outil exposé, `fetch_oracle_page` obligatoirement présent. Tant que
-l'élagage n'est pas fait, `search_oracle_docs` et `list_modules` apparaissent aussi.
+Attendu : **exactement une ligne**, `"name":"fetch_oracle_page"`. Depuis l'élagage de la 4.0.0 le
+serveur n'expose plus rien d'autre. Un outil de plus est une régression, pas une amélioration.
 
 Invariant à revérifier dès qu'on a touché `mcp/src/index.ts` : aucune écriture sur stdout.
 
@@ -128,8 +128,10 @@ Doit ne rien retourner. Un seul `console.log` corrompt le protocole pour tous le
 tiers : prévoir `timeout 120`, jamais moins, sinon on tue la requête en plein vol et on conclut
 à tort à un échec.
 
+Le cache est en mémoire seule depuis la 4.0.0, donc chaque démarrage part d'un état vide : il n'y a
+plus rien à purger avant le test.
+
 ```bash
-rm -rf ~/.cache/oracle-fusion-docs
 printf '%s\n' \
 '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"s","version":"0"}}}' \
 '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
