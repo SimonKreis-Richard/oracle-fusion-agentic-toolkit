@@ -1,0 +1,11 @@
+# Normalise les fins de ligne a LF dans le depot, quelle que soit la plateforme
+# qui commite. Sans cela, un depot alimente depuis Windows livre du CRLF aux
+# contributeurs macOS et Linux, et chaque aller-retour produit un diff complet.
+* text=auto eol=lf
+
+# Fichiers binaires: aucune conversion.
+*.png binary
+*.jpg binary
+*.pdf binary
+*.xlsx binary
+*.zip binary
