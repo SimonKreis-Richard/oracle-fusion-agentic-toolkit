@@ -1,0 +1,31 @@
+{
+  "name": "oracle-fusion-agentic-toolkit-docs-mcp",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Bundled MCP server for oracle-fusion-agentic-toolkit. Returns docs.oracle.com pages as raw markdown through fetch_oracle_page, the only path to a faithful quotation. Bundled only, never published: the standalone package it descends from is deprecated.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "oracle",
+    "fusion",
+    "hcm",
+    "mcp",
+    "documentation"
+  ],
+  "license": "MIT",
+  "author": "Simon Kreis-Richard",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
+}

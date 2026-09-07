@@ -1,0 +1,14 @@
+{
+  "name": "oracle-fusion",
+  "description": "Skills and a documentation MCP server for Oracle Fusion Cloud HCM functional consultants: root-cause debugging, configuration, and design advice.",
+  "owner": {
+    "name": "Simon Kreis-Richard"
+  },
+  "plugins": [
+    {
+      "name": "oracle-fusion-agentic-toolkit",
+      "source": "./",
+      "description": "Agentic toolkit for an Oracle Fusion Cloud HCM functional consultant. Read-only Jira access, no engagement data included."
+    }
+  ]
+}

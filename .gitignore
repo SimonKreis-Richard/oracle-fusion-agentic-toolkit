@@ -1,0 +1,39 @@
+# ── Donnee client ────────────────────────────────────────────
+# Tout ce qui appartient a un mandat vit dans engagement/ et n'en sort pas.
+# C'est la seule regle a retenir: le contexte client va la, et nulle part ailleurs.
+engagement/
+
+# ── Cablage local ────────────────────────────────────────────
+# Liens crees par `npm run wire` vers skills/, pour que le plugin soit actif
+# dans cette copie de travail sans etre installe.
+# Le motif se termine par /* et non par / : sans cela git n'entre pas dans le
+# dossier et la reintegration de smoke-check ci-dessous serait sans effet.
+.claude/skills/*
+# smoke-check est une skill de developpement du depot, versionnee, hors plugin.
+!.claude/skills/smoke-check/
+
+# ── Identifiants ─────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Prompts personnels et brouillons ─────────────────────────
+# La bibliotheque de prompts vit hors du depot. Ces lignes sont un filet:
+# une copie deposee ici par megarde ne part pas dans le depot public.
+hands-off-coding-agent.md
+wrap-up-projet.md
+*.local.md
+.scratch/
+
+# ── Node ─────────────────────────────────────────────────────
+node_modules/
+dist/
+
+# ── IDE et OS ────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini

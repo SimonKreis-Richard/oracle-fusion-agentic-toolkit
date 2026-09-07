@@ -1,0 +1,32 @@
+{
+  "name": "oracle-fusion-agentic-toolkit",
+  "version": "0.1.0",
+  "description": "Agentic toolkit for an Oracle Fusion Cloud HCM functional consultant: triage, configuration and architecture.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc && npm run build:mcp",
+    "ingest": "node dist/jira_ingest.js",
+    "wire": "node scripts/wire_local.mjs",
+    "actions": "node dist/build_actions.js",
+    "build:mcp": "npm --prefix mcp run build"
+  },
+  "keywords": [
+    "oracle",
+    "fusion",
+    "hcm",
+    "ams",
+    "jira",
+    "triage",
+    "claude-code"
+  ],
+  "license": "MIT",
+  "author": "Simon Kreis-Richard",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
+}

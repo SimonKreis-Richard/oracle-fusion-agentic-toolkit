@@ -1,0 +1,8 @@
+{
+  "name": "oracle-fusion-agentic-toolkit",
+  "description": "Agentic toolkit for an Oracle Fusion Cloud HCM functional consultant. Seven skills over one shared product knowledge base: root-cause debugging of a Jira ticket, configuration work, design advice, and Jira ingestion. Each ends in the keystrokes you run yourself and the full text of the message you send. Jira access is read-only, and no engagement data ships with the plugin.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Simon Kreis-Richard"
+  }
+}

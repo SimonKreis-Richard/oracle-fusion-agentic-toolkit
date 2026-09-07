@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "oracle-fusion-docs": {
+      "command": "node",
+      "args": ["mcp/dist/index.js"]
+    }
+  }
+}
